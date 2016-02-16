@@ -26,17 +26,20 @@ CNode.prototype={
     		//cherrio 获取sres中的数据
     		var $ = cheerio.load(sres.text);
     		//获取总页数
-    		var lastPageUrl = $('.pagination li:last-child').find('a').attr('href');
-    		console.log(lastPageUrl);
-    		//解析url
-    		var queryUrl = url.parse(lastPageUrl).query;
-    		console.log(queryUrl);
-    		//获取参数
-    		var obj  = qs.parse(queryUrl);
-    		console.log(obj); 
+            var lastPageUrl= $('.pagination li:last-child').find('a').attr('href');
+            console.log(lastPageUrl);
+    		if(lastPageUrl!=undefined){
+                var queryUrl = url.parse(lastPageUrl).query;
+                console.log(queryUrl);
+                var obj= qs.parse(queryUrl);
+                console.log(obj);
 
-    		var totalPages = obj.page;
-    		console.log(totalPages);
+                var totalPages=obj.page;
+                console.log(totalPages);
+            }else{
+                var totalPages=$('.pagination').attr('current_page');
+                console.log(totalPages);
+            }
 
     		var items=[];
     		$('#topic_list .topic_title').each(function (idx, element) {
@@ -52,7 +55,11 @@ CNode.prototype={
             items.totalPages=totalPages;
             console.log(items);
     		//return items;
-    		res.send(items);
+    		//res.send(items);
+            res.render('list',{
+                title:'资源列表',
+                items:items
+            });
     	});
 	}
 }
